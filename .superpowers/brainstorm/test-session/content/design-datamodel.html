@@ -1,0 +1,73 @@
+<h2>核心数据模型 & 热加载</h2>
+
+<div class="section">
+  <h3>ItemDefinition — YAML 结构</h3>
+  <div class="mockup">
+    <div class="mockup-header">plugins/mineUGC/items/demo_sword.yml</div>
+    <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;font-size:0.85em;line-height:1.6;color:#e0e0e0">
+<span style="color:#569cd6;">id</span>: <span style="color:#ce9178;">demo_sword</span><br>
+<span style="color:#569cd6;">name</span>: <span style="color:#ce9178;">"&6Demo Sword"</span><br>
+<span style="color:#569cd6;">material</span>: <span style="color:#ce9178;">DIAMOND_SWORD</span><br>
+<span style="color:#569cd6;">model</span>: <span style="color:#b5cea8;">10001</span><br>
+<span style="color:#569cd6;">lore</span>:<br>
+  - <span style="color:#ce9178;">"A test sword"</span><br>
+<span style="color:#569cd6;">attributes</span>:<br>
+  <span style="color:#569cd6;">damage</span>: <span style="color:#b5cea8;">15</span><br>
+  <span style="color:#569cd6;">speed</span>: <span style="color:#b5cea8;">1.6</span><br>
+<span style="color:#569cd6;">abilities</span>:<br>
+  <span style="color:#569cd6;">right_click</span>:<br>
+    <span style="color:#569cd6;">type</span>: <span style="color:#ce9178;">lightning_strike</span><br>
+    <span style="color:#569cd6;">cooldown</span>: <span style="color:#b5cea8;">10</span><br>
+    <span style="color:#569cd6;">mana_cost</span>: <span style="color:#b5cea8;">20</span><br>
+<span style="color:#569cd6;">set</span>: <span style="color:#ce9178;">demo_set</span><br>
+<span style="color:#569cd6;">recipe</span>:<br>
+  <span style="color:#569cd6;">shape</span>: [<span style="color:#ce9178;">"DDD"</span>, <span style="color:#ce9178;">"D D"</span>, <span style="color:#ce9178;">" S"</span>]<br>
+  <span style="color:#569cd6;">ingredients</span>:<br>
+    <span style="color:#569cd6;">D</span>: <span style="color:#ce9178;">DIAMOND</span><br>
+    <span style="color:#569cd6;">S</span>: <span style="color:#ce9178;">STICK</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>热加载流程</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;line-height:2;color:#e0e0e0">
+<span style="color:#6a9955;"># 1. FileWatcher 检测到 .yml 变更</span><br>
+<span style="color:#6a9955;"># 2. YamlWatcher 解析新 YAML → ItemDefinition</span><br>
+<span style="color:#6a9955;"># 3. 验证字段合法性（material 是否存在、数值是否合理）</span><br>
+<span style="color:#6a9955;"># 4. AssetRegistry.replace(id, newDefinition)</span><br>
+<span style="color:#6a9955;"># 5. 触发 AssetReloadEvent (Bukkit 事件)</span><br>
+<span style="color:#6a9955;"># 6. ItemManager 更新缓存</span><br>
+<span style="color:#6a9955;"># 7. 玩家手中的旧物品下次 tick 刷新为新版本</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>更新玩家手中物品的策略</h3>
+  <p>热加载后，玩家已有的旧物品怎么办？</p>
+  <div class="options">
+    <div class="option" data-choice="lazy" onclick="toggleSelect(this)">
+      <div class="letter">1</div>
+      <div class="content">
+        <h3>懒更新</h3>
+        <p>玩家手持物品时检测 ID，若版本过旧则自动替换为新版。性能开销最小，但不立即生效</p>
+      </div>
+    </div>
+    <div class="option" data-choice="active" onclick="toggleSelect(this)">
+      <div class="letter">2</div>
+      <div class="content">
+        <h3>主动推送</h3>
+        <p>热加载后扫描所有在线玩家背包，替换对应物品。立即生效，但大规模扫描有性能开销</p>
+      </div>
+    </div>
+    <div class="option" data-choice="both" onclick="toggleSelect(this)">
+      <div class="letter">3</div>
+      <div class="content">
+        <h3>主动推送 + 懒更新兜底</h3>
+        <p>先扫描在线玩家更新，不在线的等上线后懒更新</p>
+      </div>
+    </div>
+  </div>
+</div>

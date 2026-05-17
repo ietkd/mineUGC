@@ -1,0 +1,26 @@
+<h2>数据存储方式</h2>
+<p class="subtitle">自定义物品的数据存在哪里？</p>
+
+<div class="options">
+  <div class="option" data-choice="yaml" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>YAML 配置文件</h3>
+      <p>所有物品定义在 plugins/mineUGC/items/ 目录下的 .yml 文件中，文件监听自动热加载</p>
+    </div>
+  </div>
+  <div class="option" data-choice="sqlite" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>SQLite 数据库</h3>
+      <p>物品存储在本地数据库文件中，适合大量物品，GUI 编辑直接写库</p>
+    </div>
+  </div>
+  <div class="option" data-choice="hybrid" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>YAML + SQLite 混合</h3>
+      <p>物品定义在 YAML（可移植、可热加载），运行时缓存/状态存 SQLite</p>
+    </div>
+  </div>
+</div>

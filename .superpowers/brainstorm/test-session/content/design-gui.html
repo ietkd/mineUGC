@@ -1,0 +1,57 @@
+<h2>GUI 编辑器 & 命令系统</h2>
+
+<div class="section">
+  <h3>命令结构</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;line-height:2;color:#e0e0e0">
+<span style="color:#569cd6;">/ugc item list</span>          <span style="color:#6a9955;"># 列出所有物品</span><br>
+<span style="color:#569cd6;">/ugc item give &lt;id&gt;</span>    <span style="color:#6a9955;"># 获取物品</span><br>
+<span style="color:#569cd6;">/ugc item reload</span>        <span style="color:#6a9955;"># 手动触发热加载</span><br>
+<span style="color:#569cd6;">/ugc edit</span>               <span style="color:#6a9955;"># 打开 GUI 编辑器</span><br>
+<span style="color:#569cd6;">/ugc reload</span>             <span style="color:#6a9955;"># 重新加载所有资产</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>编辑器 GUI 界面流程</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="text-align:left;padding:20px;font-family:monospace;line-height:2">
+<strong style="color:#569cd6;">主菜单</strong><br>
+┌──────────────────────────────────┐<br>
+│  📦 Item Editor             [X] │<br>
+│                                  │<br>
+│  [新建物品]  [编辑现有]  [管理分类] │<br>
+│                                  │<br>
+│  ── 最近编辑 ──                   │<br>
+│  • demo_sword.yml         ☰  ⟳  │<br>
+│  • fire_bow.yml           ☰  ⟳  │<br>
+│  • thunder_axe.yml        ☰  ⟳  │<br>
+└──────────────────────────────────┘
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>创建/编辑物品 GUI</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="text-align:left;padding:20px;font-family:monospace;line-height:2">
+<strong style="color:#569cd6;">编辑: demo_sword</strong><br>
+┌─────────────────────────────────────┐<br>
+│  [✏️ 名称]  [🧊 材质]  [🏷️ 模型ID] │<br>
+│  [📝 Lore]   [⚔️ 属性]  [✨ 技能]   │<br>
+│  [🛡️ 被动]   [👑 套装]  [🔧 配方]   │<br>
+│                                    │<br>
+│  [保存]         [预览物品]  [导出]   │<br>
+└─────────────────────────────────────┘
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>GUI 实现原则</h3>
+  <p>• 所有编辑项点开后弹子菜单 / 虚拟键盘输入</p>
+  <p>• 保存时直接写回 YAML 文件，触发热加载</p>
+  <p>• 道具预览在编辑界面中直接展示成品物品</p>
+  <p>• 所有界面可点 [X] 或按 ESC 关闭，不阻塞玩家操作</p>
+</div>

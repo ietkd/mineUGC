@@ -1,0 +1,42 @@
+<h2>Phase 1 设计 — 模块结构</h2>
+
+<div class="mockup">
+  <div class="mockup-header">Gradle 多模块项目</div>
+  <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;line-height:2">
+    mineUGC/<br>
+    ├── <b>build.gradle</b> (root — 聚合所有子模块)<br>
+    ├── <b>settings.gradle</b> (include 所有子模块)<br>
+    ├── 📦 <b>core/</b><br>
+    │   └── src/main/java/org/mineUGC/<br>
+    │       ├── <b>models/</b>     — UgcAsset 接口, ItemDefinition 模型类<br>
+    │       ├── <b>registry/</b>   — AssetRegistry (注册、查找、热替换)<br>
+    │       ├── <b>events/</b>     — 自定义 Bukkit 事件 (AssetLoadEvent, etc.)<br>
+    │       └── <b>commands/</b>   — 基础命令框架<br>
+    ├── 📦 <b>storage/</b><br>
+    │   └── src/main/java/org/mineUGC/storage/<br>
+    │       ├── <b>yaml/</b>      — YamlItemLoader, YamlWatcher (热加载)<br>
+    │       └── <b>sqlite/</b>    — DatabaseManager, PlayerDataDAO<br>
+    ├── 📦 <b>items/</b><br>
+    │   └── src/main/java/org/mineUGC/items/<br>
+    │       ├── <b>attributes/</b> — AttributeApplier (数值映射到 NBT)<br>
+    │       ├── <b>abilities/</b>  — AbilityExecutor (主动技能)<br>
+    │       ├── <b>passives/</b>   — PassiveEffect (被动效果)<br>
+    │       ├── <b>sets/</b>       — SetBonusTracker<br>
+    │       ├── <b>crafting/</b>   — CustomRecipeManager<br>
+    │       └── <b>listeners/</b>  — Bukkit 监听器 (右键、穿戴、攻击检测)<br>
+    ├── 📦 <b>gui/</b><br />
+    │   └── src/main/java/org/mineUGC/gui/<br>
+    │       └── <b>editor/</b>    — 物品编辑 GUI 界面<br>
+    └── 📦 <b>plugin/</b> (入口模块 — 唯一有 plugin.yml 的模块)<br>
+        └── src/main/java/org/mineUGC/plugin/<br>
+            └── MineUGC.java (extends JavaPlugin, 启动所有模块)
+  </div>
+</div>
+
+<div class="section">
+  <h3>依赖关系</h3>
+  <p>plugin → core ← storage → SQLite</p>
+  <p>plugin → items → core</p>
+  <p>plugin → gui → items, core</p>
+  <p style="margin-top:8px;color:#666;">core 对其它模块无依赖 — 这是整个系统的核心契约</p>
+</div>

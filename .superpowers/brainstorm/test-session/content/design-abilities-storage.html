@@ -1,0 +1,60 @@
+<h2>技能系统 & 存储层设计</h2>
+
+<div class="section">
+  <h3>Ability 系统架构</h3>
+  <p><strong>出发点是 F 不自创脚本语言</strong> — 所以技能效果通过预定义类型 + 配置参数实现</p>
+  <div class="mockup">
+    <div class="mockup-header">abilities: 配置即逻辑</div>
+    <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;font-size:0.9em;line-height:1.6;color:#e0e0e0">
+<span style="color:#6a9955;"># 玩家无需写代码，只需选效果类型+填参数</span><br>
+abilities:<br>
+  <span style="color:#6a9955;"># 主动技能 — 右键触发</span><br>
+  right_click:<br>
+    type: <span style="color:#ce9178;">lightning_strike</span>  <span style="color:#6a9955;"># 预定义效果类型</span><br>
+    cooldown: <span style="color:#b5cea8;">10</span>                <span style="color:#6a9955;"># 秒</span><br>
+    mana_cost: <span style="color:#b5cea8;">20</span><br>
+    damage: <span style="color:#b5cea8;">8</span><br>
+  <span style="color:#6a9955;"># 被动效果 — 穿戴时生效</span><br>
+  on_wear:<br>
+    type: <span style="color:#ce9178;">potion_effect</span><br>
+    effect: <span style="color:#ce9178;">speed</span><br>
+    amplifier: <span style="color:#b5cea8;">1</span>
+    </div>
+  </div>
+  <p>预定义效果类型举例：<code>lightning_strike</code>, <code>potion_effect</code>, <code>projectile</code>, <code>explosion</code>, <code>heal</code>, <code>teleport</code>, <code>summon</code>, <code>particle_ring</code></p>
+  <p>将来 Phase 3 脚本引擎接入后，可以加 <code>script: my_script.js</code> 扩展任意逻辑</p>
+</div>
+
+<div class="section">
+  <h3>SQLite 存储结构</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;font-size:0.9em;line-height:2;color:#e0e0e0">
+<span style="color:#6a9955;">-- 运行时状态 / 玩家数据</span><br>
+<span style="color:#569cd6;">CREATE TABLE</span> player_cooldowns (<br>
+  player_uuid TEXT PRIMARY KEY,<br>
+  item_id     TEXT,<br>
+  ability_key TEXT,<br>
+  expires_at  INTEGER<br>
+);<br><br>
+<span style="color:#569cd6;">CREATE TABLE</span> player_data (<br>
+  player_uuid TEXT PRIMARY KEY,<br>
+  unlocked_items TEXT  <span style="color:#6a9955;">-- JSON array: ["demo_sword", ...]</span><br>
+);<br><br>
+<span style="color:#6a9955;">-- 注意: 物品定义本身在 YAML 中，SQLite 只存运行时状态</span>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>数据流总结</h3>
+  <div class="mockup">
+    <div class="mockup-body" style="text-align:left;padding:16px;font-family:monospace;line-height:2;color:#e0e0e0">
+<span style="color:#6a9955;"># 写入路径</span><br>
+GUI 编辑 → YamlWriter → <strong>items/*.yml</strong><br><br>
+<span style="color:#6a9955;"># 读取路径</span><br>
+YamlWatcher → ItemDefinition → AssetRegistry → ItemManager → 游戏<br><br>
+<span style="color:#6a9955;"># 运行时状态</span><br>
+玩家冷却/数据 → <strong>SQLite</strong> (item 定义不同步到 SQLite)
+    </div>
+  </div>
+</div>

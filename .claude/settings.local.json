@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(export JAVA_HOME=\"C:/Program Files/Java/zulu21.40.17-ca-jdk21.0.6-win_x64\")",
+      "Bash('C:/Program Files/Java/zulu21.40.17-ca-jdk21.0.6-win_x64/bin/java' -version)",
+      "Bash(git *)",
+      "Bash(C:\\\\Users\\\\ruksin\\\\.claude\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh *)",
+      "Bash(./gradlew build *)"
+    ]
+  }
+}
