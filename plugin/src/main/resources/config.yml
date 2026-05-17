@@ -1,0 +1,4 @@
+# mineUGC configuration
+items-directory: items
+database:
+  filename: mineugc.db

@@ -2,3 +2,12 @@ name: mineUGC
 version: '${version}'
 main: org.mineUGC.plugin.MineUGC
 api-version: '1.21'
+commands:
+  ugc:
+    description: mineUGC main command
+    usage: /<command> <list|give|reload|edit>
+    permission: mineugc.ugc
+permissions:
+  mineugc.ugc:
+    description: Allows using /ugc
+    default: op
