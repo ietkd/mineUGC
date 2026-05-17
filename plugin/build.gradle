@@ -2,11 +2,21 @@ plugins {
     id 'java'
 }
 
+repositories {
+    maven { url "https://jitpack.io" }
+}
+
 dependencies {
     implementation project(':core')
     implementation project(':storage')
     implementation project(':items')
     implementation project(':gui')
+    testImplementation("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    testImplementation("com.github.MockBukkit:MockBukkit:v4.110.0") {
+        exclude group: "org.junit.jupiter"
+        exclude group: "org.junit.platform"
+        exclude group: "org.junit"
+    }
 }
 
 processResources {

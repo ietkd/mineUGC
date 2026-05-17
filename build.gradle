@@ -39,3 +39,67 @@ subprojects {
         useJUnitPlatform()
     }
 }
+
+def paperVersion = '1.21.1'
+def paperBuild = 133
+def paperJar = "paper-${paperVersion}-${paperBuild}.jar"
+def paperUrl = "https://api.papermc.io/v2/projects/paper/versions/${paperVersion}/builds/${paperBuild}/downloads/${paperJar}"
+def runDir = file('run')
+
+tasks.register('runServer') {
+    dependsOn ':plugin:jar'
+    doLast {
+        // Ensure plugin JAR is built
+        def pluginJar = project(':plugin').tasks.jar.archiveFile.get().asFile
+        def pluginsDir = new File(runDir, 'plugins')
+        def destPluginJar = new File(pluginsDir, pluginJar.name)
+
+        // Create run directory structure
+        runDir.mkdirs()
+        pluginsDir.mkdirs()
+
+        // Download Paper JAR if not present
+        def serverJar = new File(runDir, paperJar)
+        if (!serverJar.exists()) {
+            logger.lifecycle("Downloading Paper {} build {} ...", paperVersion, paperBuild)
+            def url = new URL(paperUrl)
+            serverJar.withOutputStream { out ->
+                url.withInputStream { input -> out << input }
+            }
+            logger.lifecycle("Downloaded {}", serverJar.name)
+        }
+
+        // Accept EULA
+        def eulaFile = new File(runDir, 'eula.txt')
+        if (!eulaFile.exists() || !eulaFile.text.contains('eula=true')) {
+            eulaFile.text = 'eula=true'
+            logger.lifecycle("EULA accepted")
+        }
+
+        // Copy plugin JAR
+        if (pluginJar.exists()) {
+            destPluginJar.withOutputStream { out ->
+                pluginJar.withInputStream { input -> out << input }
+            }
+            logger.lifecycle("Copied plugin to {}", destPluginJar)
+        } else {
+            throw new GradleException("Plugin JAR not found: ${pluginJar}")
+        }
+
+        // Run the server
+        logger.lifecycle("Starting Paper server...")
+        def javaExec = System.getenv('JAVA_HOME')
+            ? new File(System.getenv('JAVA_HOME'), 'bin/java').absolutePath
+            : 'java'
+
+        def process = new ProcessBuilder(
+            javaExec,
+            '-jar', serverJar.absolutePath
+        )
+            .directory(runDir)
+            .inheritIO()
+            .start()
+
+        process.waitFor()
+    }
+}

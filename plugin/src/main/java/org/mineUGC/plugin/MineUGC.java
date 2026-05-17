@@ -27,7 +27,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.logging.Level;
 
-public final class MineUGC extends JavaPlugin {
+public class MineUGC extends JavaPlugin {
     private AssetRegistry<ItemDefinition> registry;
     private ItemManager itemManager;
     private InventoryScanner inventoryScanner;
