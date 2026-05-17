@@ -9,6 +9,7 @@ import org.bukkit.plugin.Plugin;
 import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.AbilityConfig;
 import org.mineUGC.core.model.ItemDefinition;
+import org.mineUGC.core.model.PassiveConfig;
 import org.mineUGC.items.ItemManager;
 
 import java.io.File;
@@ -176,6 +177,51 @@ public class GuiListener implements Listener {
                         if (ability != null) {
                             ability.setManaCost(val);
                             player.sendMessage(messages.get("editor.mana-set", val));
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    player.sendMessage(messages.get("editor.invalid-number"));
+                    return;
+                }
+            }
+            case "passive_add" -> {
+                if (def.getPassives() == null) def.setPassives(new HashMap<>());
+                if (def.getPassives().containsKey(input)) {
+                    player.sendMessage("§c被动key已存在: " + input);
+                    return;
+                }
+                def.getPassives().put(input, new PassiveConfig());
+                player.sendMessage(messages.get("editor.passive-added", input));
+            }
+            case "passive_type" -> {
+                String key = session.getEditingPassiveKey();
+                if (key != null && def.getPassives() != null) {
+                    PassiveConfig passive = def.getPassives().get(key);
+                    if (passive != null) {
+                        passive.setType(input);
+                        player.sendMessage(messages.get("editor.type-set", input));
+                    }
+                }
+            }
+            case "passive_effect" -> {
+                String key = session.getEditingPassiveKey();
+                if (key != null && def.getPassives() != null) {
+                    PassiveConfig passive = def.getPassives().get(key);
+                    if (passive != null) {
+                        passive.setEffect(input);
+                        player.sendMessage(messages.get("editor.effect-set", input));
+                    }
+                }
+            }
+            case "passive_amplifier" -> {
+                try {
+                    int val = Integer.parseInt(input);
+                    String key = session.getEditingPassiveKey();
+                    if (key != null && def.getPassives() != null) {
+                        PassiveConfig passive = def.getPassives().get(key);
+                        if (passive != null) {
+                            passive.setAmplifier(val);
+                            player.sendMessage(messages.get("editor.amplifier-set", val));
                         }
                     }
                 } catch (NumberFormatException e) {

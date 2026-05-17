@@ -41,7 +41,7 @@ public class ItemEditorInventory extends FastInv {
         setItem(20, createItem(Material.BLAZE_POWDER, m.get("editor.field-abilities"), m.get("editor.click-configure")),
                 e -> new AbilityListInventory(player, def, itemManager, guiListener).open(player));
         setItem(21, createItem(Material.POTION, m.get("editor.field-passives"), m.get("editor.click-configure")),
-                e -> player.sendMessage(m.get("editor.coming-soon", m.get("editor.field-passives"))));
+                e -> new PassiveListInventory(player, def, itemManager, guiListener).open(player));
         setItem(22, createItem(Material.ENDER_EYE, m.get("editor.field-set-bonus"), current(def.getSet(), m)),
                 e -> guiListener.promptField(player, "set", m.get("editor.prompt-set")));
         setItem(23, createItem(Material.CRAFTING_TABLE, m.get("editor.field-recipe"), m.get("editor.click-configure")),
