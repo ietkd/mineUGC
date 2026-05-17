@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.AbilityConfig;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.items.ItemManager;
@@ -22,13 +23,15 @@ public class ItemListener implements Listener {
     private final AbilityExecutor abilityExecutor;
     private final PlayerDataDAO playerDataDAO;
     private final Logger logger;
+    private final Messages messages;
 
     public ItemListener(ItemManager itemManager, AbilityExecutor abilityExecutor,
-                        PlayerDataDAO playerDataDAO, Logger logger) {
+                        PlayerDataDAO playerDataDAO, Logger logger, Messages messages) {
         this.itemManager = itemManager;
         this.abilityExecutor = abilityExecutor;
         this.playerDataDAO = playerDataDAO;
         this.logger = logger;
+        this.messages = messages;
     }
 
     @EventHandler(priority = EventPriority.HIGH)
@@ -53,7 +56,7 @@ public class ItemListener implements Listener {
         try {
             long expiry = playerDataDAO.getCooldownExpiry(playerId, itemId, "right_click");
             if (expiry > System.currentTimeMillis()) {
-                player.sendMessage("§cAbility on cooldown.");
+                player.sendMessage(messages.get("items.cooldown"));
                 return;
             }
         } catch (SQLException e) {

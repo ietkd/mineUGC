@@ -1,0 +1,65 @@
+<h2>5 个功能的设计方案</h2>
+<p class="subtitle">混合方式：简单功能用聊天，复杂功能用子 Inventory</p>
+
+<div class="section">
+  <h3>① 套装 (Set Bonus) — 聊天输入</h3>
+  <p>最简单——就是一个名字字符串。</p>
+  <div style="background: #1a1a2e; padding: 8px 12px; border-radius: 6px; font-size: 13px;">
+    <span style="color: #4a4;">点击按钮</span> → chat: "输入套装名称" → 输入 "烈焰套装" → <span style="color: #4a4;">完成</span>
+  </div>
+</div>
+
+<div class="section">
+  <h3>② 属性 (Attributes) — 子界面</h3>
+  <p>Map&lt;String, Double&gt; 键值对编辑。</p>
+  <div style="background: #1a1a2e; padding: 12px; border-radius: 6px;">
+    <div style="display: flex; gap: 24px; font-size: 13px;">
+      <div><b style="color: #7b7bff;">54 格界面</b><br>
+        · 已有属性以物品展示<br>
+        · 点击单个属性 = 删除<br>
+        · 🟢 添加按钮 → chat: "damage 5.0"<br>
+        · 🔴 返回按钮
+      </div>
+      <div style="background: #16213e; padding: 8px; border-radius: 4px; display: grid; grid-template-columns: repeat(7, 32px); gap: 2px;">
+        <div style="width:32px;height:32px;background:#a80;border:1px solid #555;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;">dmg</div>
+        <div style="width:32px;height:32px;background:#a80;border:1px solid #555;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;">spd</div>
+        <div style="width:32px;height:32px;background:#a80;border:1px solid #555;font-size:8px;color:#fff;display:flex;align-items:center;justify-content:center;">arm</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <h3>③④ 技能 & 被动 — 两层子界面</h3>
+  <p>因为每个技能/被动有多个字段（type, cooldown 等），用两层界面：</p>
+  <div style="background: #1a1a2e; padding: 12px; border-radius: 6px; font-size: 13px;">
+    <b style="color: #7b7bff;">第一层 (列表):</b> 54 格，显示所有技能 key<br>
+    &nbsp;&nbsp;· 点击已有技能 → 打开编辑界面<br>
+    &nbsp;&nbsp;· 🟢 添加 → chat: "输入技能key (如 right_click)"<br>
+    &nbsp;&nbsp;· 🔴 返回<br><br>
+    <b style="color: #7b7bff;">第二层 (编辑):</b> 36 格<br>
+    &nbsp;&nbsp;· 显示当前技能名<br>
+    &nbsp;&nbsp;· Type 字段 → chat 输入<br>
+    &nbsp;&nbsp;· Cooldown 字段 → chat 输入 (数字)<br>
+    &nbsp;&nbsp;· Mana Cost 字段 → chat 输入 (数字)<br>
+    &nbsp;&nbsp;· 🗑️ 删除此技能<br>
+    &nbsp;&nbsp;· 🔴 返回列表
+  </div>
+</div>
+
+<div class="section">
+  <h3>⑤ 配方 (Recipe) — 子界面</h3>
+  <p>Shape (3字符串) + Ingredients (字符→物品名)。</p>
+  <div style="background: #1a1a2e; padding: 12px; border-radius: 6px; font-size: 13px;">
+    54 格界面：<br>
+    · 显示当前 3×3 形状预览<br>
+    · 显示材料映射 (A=DIAMOND, B=STICK)<br>
+    · 🟢 编辑形状 → chat: "ABA,AAA,CDC"<br>
+    · 🟢 编辑材料 → chat: "A=DIAMOND,B=STICK"<br>
+    · 🔴 返回
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.section').forEach(el => el.style.display = 'block');
+</script>

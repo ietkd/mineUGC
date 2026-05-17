@@ -35,7 +35,20 @@
       "Bash(grep -i \"MockBukkit\\\\$\")",
       "Bash(python *)",
       "Bash(./gradlew tasks *)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(./gradlew compileJava)",
+      "Bash(./gradlew test *)",
+      "Bash(./gradlew :items:compileJava --info)",
+      "Bash(./gradlew :items:dependencies --configuration compileClasspath)",
+      "Bash(cd /tmp)",
+      "Bash(jar xf *)",
+      "Bash(javap -p org/bukkit/attribute/Attribute.class)",
+      "Bash(./gradlew :plugin:jar)",
+      "Bash(javap -p org/bukkit/Registry.class)",
+      "Bash(./gradlew :items:compileJava)",
+      "Bash(C:/Users/ruksin/.claude/skills/brainstorming/scripts/start-server.sh *)",
+      "WebSearch",
+      "Bash(./gradlew :gui:compileJava *)"
     ]
   }
 }

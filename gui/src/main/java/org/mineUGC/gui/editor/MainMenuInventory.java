@@ -4,6 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.gui.fastinv.FastInv;
 import org.mineUGC.items.ItemManager;
@@ -14,12 +15,12 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainMenuInventory extends FastInv {
-    private static final String TITLE = "§8UGC Item Editor";
-
     public MainMenuInventory(Player player, ItemManager itemManager, GuiListener guiListener) {
-        super(54, TITLE);
+        super(54, guiListener.getMessages().get("editor.title"));
 
-        setItem(10, createItem(Material.GREEN_WOOL, "§a§lNew Item", "§7Create a new custom item"),
+        Messages m = guiListener.getMessages();
+
+        setItem(10, createItem(Material.GREEN_WOOL, m.get("editor.new-item"), m.get("editor.new-item-lore")),
                 e -> {
                     ItemDefinition def = new ItemDefinition();
                     def.setId("custom_item_" + System.currentTimeMillis());
@@ -38,8 +39,8 @@ public class MainMenuInventory extends FastInv {
             if (meta != null) {
                 List<String> lore = meta.getLore() != null ? new ArrayList<>(meta.getLore()) : new ArrayList<>();
                 lore.add("");
-                lore.add("§eLeft-click to edit");
-                lore.add("§eRight-click to give to self");
+                lore.add(m.get("editor.left-click-edit"));
+                lore.add(m.get("editor.right-click-give"));
                 meta.setLore(lore);
                 display.setItemMeta(meta);
             }
@@ -53,7 +54,8 @@ public class MainMenuInventory extends FastInv {
                     ItemStack item = itemManager.createItemStack(def);
                     new AttributeApplier().apply(item, def.getAttributes());
                     player.getInventory().addItem(item);
-                    player.sendMessage("§aReceived " + (def.getName() != null ? def.getName() : def.getId()) + "§a.");
+                    String name = def.getName() != null ? def.getName() : def.getId();
+                    player.sendMessage(m.get("editor.item-received", name));
                 }
             });
             slot++;

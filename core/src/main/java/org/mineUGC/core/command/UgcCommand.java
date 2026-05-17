@@ -5,18 +5,24 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.jetbrains.annotations.NotNull;
+import org.mineUGC.core.message.Messages;
 
 import java.util.List;
 
 public abstract class UgcCommand implements CommandExecutor, TabCompleter {
 
     protected static final String PERMISSION_PREFIX = "mineugc.";
+    protected final Messages messages;
+
+    protected UgcCommand(Messages messages) {
+        this.messages = messages;
+    }
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command,
                              @NotNull String label, @NotNull String[] args) {
         if (!sender.hasPermission(PERMISSION_PREFIX + command.getName())) {
-            sender.sendMessage("§cYou don't have permission.");
+            sender.sendMessage(messages.get("command.no-permission"));
             return true;
         }
         return execute(sender, command, label, args);
@@ -39,7 +45,7 @@ public abstract class UgcCommand implements CommandExecutor, TabCompleter {
 
     protected boolean requirePlayer(CommandSender sender) {
         if (!(sender instanceof org.bukkit.entity.Player)) {
-            sender.sendMessage("§cPlayer only command.");
+            sender.sendMessage(messages.get("command.player-only"));
             return false;
         }
         return true;

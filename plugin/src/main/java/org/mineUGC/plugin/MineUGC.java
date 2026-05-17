@@ -6,6 +6,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.mineUGC.core.command.UgcCommand;
 import org.mineUGC.core.event.AssetReloadEvent;
+import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.core.registry.AssetRegistry;
 import org.mineUGC.items.InventoryScanner;
@@ -40,10 +41,13 @@ public class MineUGC extends JavaPlugin {
     private YamlItemLoader yamlLoader;
     private GuiListener guiListener;
     private CustomRecipeManager recipeManager;
+    private Messages messages;
 
     @Override
     public void onEnable() {
         saveDefaultConfig();
+
+        this.messages = new Messages();
 
         // Core
         this.registry = new AssetRegistry<>();
@@ -70,7 +74,7 @@ public class MineUGC extends JavaPlugin {
         this.recipeManager = new CustomRecipeManager(this, itemManager);
 
         // GUI
-        this.guiListener = new GuiListener(this, itemManager, getItemsDirectory());
+        this.guiListener = new GuiListener(this, itemManager, getItemsDirectory(), messages);
 
         // Load items from files
         loadAllItems();
@@ -81,7 +85,7 @@ public class MineUGC extends JavaPlugin {
         // Register listeners
         FastInvManager.register(this);
         getServer().getPluginManager().registerEvents(
-                new ItemListener(itemManager, abilityExecutor, playerDataDAO, getLogger()), this);
+                new ItemListener(itemManager, abilityExecutor, playerDataDAO, getLogger(), messages), this);
         getServer().getPluginManager().registerEvents(guiListener, this);
 
         // Register commands
@@ -169,36 +173,36 @@ public class MineUGC extends JavaPlugin {
     private void registerCommands() {
         var cmd = getServer().getPluginCommand("ugc");
         if (cmd != null) {
-            cmd.setExecutor(new UgcCommand() {
+            cmd.setExecutor(new UgcCommand(messages) {
                 @Override
                 protected boolean execute(CommandSender sender, Command command, String label, String[] args) {
                     if (args.length == 0) {
-                        sender.sendMessage("§6mineUGC v" + getPluginMeta().getVersion());
+                        sender.sendMessage(messages.get("command.version", getPluginMeta().getVersion()));
                         return true;
                     }
 
                     switch (args[0].toLowerCase()) {
                         case "list" -> {
                             var items = itemManager.getAllDefinitions();
-                            sender.sendMessage("§6Items (" + items.size() + "):");
-                            items.forEach(i -> sender.sendMessage(" §7- §f" + i.getId()));
+                            sender.sendMessage(messages.get("command.items-header", items.size()));
+                            items.forEach(i -> sender.sendMessage(messages.get("command.item-entry", i.getId())));
                         }
                         case "give" -> {
                             if (!requirePlayer(sender)) return true;
                             if (args.length < 2) {
-                                sender.sendMessage("§cUsage: /ugc give <item_id>");
+                                sender.sendMessage(messages.get("command.give-usage"));
                                 return true;
                             }
                             ItemDefinition def = itemManager.getDefinition(args[1]);
                             if (def == null) {
-                                sender.sendMessage("§cItem not found: " + args[1]);
+                                sender.sendMessage(messages.get("command.item-not-found", args[1]));
                                 return true;
                             }
                             Player p = (Player) sender;
                             var item = itemManager.createItemStack(def);
                             new AttributeApplier().apply(item, def.getAttributes());
                             p.getInventory().addItem(item);
-                            p.sendMessage("§aReceived " + def.getName() + "§a.");
+                            p.sendMessage(messages.get("command.item-received", def.getName()));
                         }
                         case "reload" -> {
                             registry.clear();
@@ -207,7 +211,7 @@ public class MineUGC extends JavaPlugin {
                             }
                             loadAllItems();
                             recipeManager.reloadRecipes();
-                            sender.sendMessage("§aAll items reloaded.");
+                            sender.sendMessage(messages.get("command.all-reloaded"));
                         }
                         case "edit" -> {
                             if (!requirePlayer(sender)) return true;
@@ -215,7 +219,7 @@ public class MineUGC extends JavaPlugin {
                             new MainMenuInventory(p, itemManager, guiListener).open(p);
                         }
                         default ->
-                            sender.sendMessage("§cUsage: /ugc <list|give|reload|edit>");
+                            sender.sendMessage(messages.get("command.usage"));
                     }
                     return true;
                 }
