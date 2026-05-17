@@ -18,7 +18,9 @@ import org.mineUGC.storage.sqlite.DatabaseManager;
 import org.mineUGC.storage.sqlite.PlayerDataDAO;
 import org.mineUGC.storage.yaml.YamlItemLoader;
 import org.mineUGC.storage.yaml.YamlWatcher;
-import org.mineUGC.gui.editor.EditorMenu;
+import org.mineUGC.gui.editor.GuiListener;
+import org.mineUGC.gui.editor.MainMenuInventory;
+import org.mineUGC.gui.fastinv.FastInvManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +38,7 @@ public class MineUGC extends JavaPlugin {
     private PlayerDataDAO playerDataDAO;
     private YamlWatcher yamlWatcher;
     private YamlItemLoader yamlLoader;
-    private EditorMenu editorMenu;
+    private GuiListener guiListener;
     private CustomRecipeManager recipeManager;
 
     @Override
@@ -68,7 +70,7 @@ public class MineUGC extends JavaPlugin {
         this.recipeManager = new CustomRecipeManager(this, itemManager);
 
         // GUI
-        this.editorMenu = new EditorMenu(itemManager);
+        this.guiListener = new GuiListener(this, itemManager, getItemsDirectory());
 
         // Load items from files
         loadAllItems();
@@ -77,8 +79,10 @@ public class MineUGC extends JavaPlugin {
         recipeManager.reloadRecipes();
 
         // Register listeners
+        FastInvManager.register(this);
         getServer().getPluginManager().registerEvents(
                 new ItemListener(itemManager, abilityExecutor, playerDataDAO, getLogger()), this);
+        getServer().getPluginManager().registerEvents(guiListener, this);
 
         // Register commands
         registerCommands();
@@ -207,7 +211,8 @@ public class MineUGC extends JavaPlugin {
                         }
                         case "edit" -> {
                             if (!requirePlayer(sender)) return true;
-                            editorMenu.openMainMenu((Player) sender);
+                            Player p = (Player) sender;
+                            new MainMenuInventory(p, itemManager, guiListener).open(p);
                         }
                         default ->
                             sender.sendMessage("§cUsage: /ugc <list|give|reload|edit>");

@@ -17,7 +17,25 @@
       "Bash(./gradlew :core:test)",
       "Bash(./gradlew :core:cleanTest *)",
       "Bash(./gradlew :core:test --info)",
-      "Bash(./gradlew :storage:test *)"
+      "Bash(./gradlew :storage:test *)",
+      "Bash(./gradlew :items:test)",
+      "Bash(./gradlew :items:test --stacktrace)",
+      "Bash(./gradlew :items:dependencies --configuration testRuntimeClasspath)",
+      "Bash(./gradlew :items:dependencies)",
+      "Bash(javap *)",
+      "Bash(./gradlew :items:compileTestJava)",
+      "Bash(./gradlew :items:build)",
+      "Bash(./gradlew :gui:build)",
+      "Bash(./gradlew :plugin:test *)",
+      "Bash(curl -s \"https://repo.codemc.io/repository/maven-public/com/github/seeseemelk/MockBukkit/maven-metadata.xml\")",
+      "Bash(./gradlew help *)",
+      "Bash(powershell *)",
+      "Bash(python -c \"import sys, re; html = sys.stdin.read\\(\\); items = re.findall\\(r'<a href=\\\\\"\\([^\\\\\"]+\\)\\\\\"', html\\); [print\\(i\\) for i in items if i != '../']\")",
+      "Bash(./gradlew :plugin:dependencies *)",
+      "Bash(grep -i \"MockBukkit\\\\$\")",
+      "Bash(python *)",
+      "Bash(./gradlew tasks *)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

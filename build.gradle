@@ -47,6 +47,7 @@ def paperUrl = "https://api.papermc.io/v2/projects/paper/versions/${paperVersion
 def runDir = file('run')
 
 tasks.register('runServer') {
+    description = 'Download and run Paper server with the plugin'
     dependsOn ':plugin:jar'
     doLast {
         // Ensure plugin JAR is built
@@ -101,5 +102,39 @@ tasks.register('runServer') {
             .start()
 
         process.waitFor()
+    }
+}
+
+tasks.register('run') {
+    dependsOn tasks.named('runServer')
+    description = 'Alias for runServer'
+}
+
+tasks.register('gread') {
+    description = 'Stage all files, commit, and push to GitHub (.gitignore handles exclusions)'
+    doLast {
+        exec { commandLine 'git', 'add', '--all' }
+
+        def commitMsg = project.findProperty('commitMsg') ?: 'update'
+        def result = exec {
+            commandLine 'git', 'commit', '-m', commitMsg
+            ignoreExitValue = true
+        }
+        if (result.exitValue != 0) {
+            logger.lifecycle("Nothing to commit or commit failed — skipping push.")
+            return
+        }
+
+        def remote = new ByteArrayOutputStream()
+        exec {
+            commandLine 'git', 'remote'
+            standardOutput = remote
+            ignoreExitValue = true
+        }
+        if (remote.toString().trim()) {
+            exec { commandLine 'git', 'push' }
+        } else {
+            logger.lifecycle("Committed locally — no remote configured.")
+        }
     }
 }
