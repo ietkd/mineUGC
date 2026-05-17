@@ -1,0 +1,120 @@
+# mineUGC 中文消息文件
+# 可使用 § 颜色代码
+
+command:
+  no-permission: "§c你没有权限。"
+  player-only: "§c只有玩家才能执行此命令。"
+  version: "§6mineUGC v%s"
+  items-header: "§6物品 (%d):"
+  item-entry: " §7- §f%s"
+  give-usage: "§c用法: /ugc give <物品ID>"
+  item-not-found: "§c未找到物品: %s"
+  item-received: "§a已获得 %s§a。"
+  all-reloaded: "§a所有物品已重新加载。"
+  usage: "§c用法: /ugc <list|give|reload|edit>"
+
+editor:
+  title: "§8UGC 物品编辑器"
+  new-item: "§a§l新建物品"
+  new-item-lore: "§7创建一个新的自定义物品"
+  left-click-edit: "§e左键点击编辑"
+  right-click-give: "§e右键点击给予"
+  item-received: "§a已获得 %s§a。"
+
+  editing-prefix: "§8编辑: "
+
+  field-name: "§e名称"
+  field-id: "§e物品ID"
+  field-material: "§e材质"
+  field-model: "§e模型ID"
+  field-lore: "§e描述"
+  field-attributes: "§e属性"
+  field-abilities: "§e技能"
+  field-passives: "§e被动"
+  field-set-bonus: "§e套装加成"
+  field-recipe: "§e配方"
+  field-save: "§a§l保存"
+  field-back: "§c返回"
+
+  current: "§7当前: §f%s"
+  not-set: "§7未设置"
+  click-configure: "§7点击配置"
+  coming-soon: "§e%s: 即将推出 — 请直接编辑YAML文件"
+  save-lore: "§7保存更改并重新加载"
+  back-lore: "§7返回主菜单"
+
+  save-no-id: "§c无法保存: 物品没有ID。"
+  save-success: "§a已保存 §f%s§a。"
+  save-failed: "§c保存失败: %s"
+
+  prompt-name: "输入新的显示名称 (用 & 表示颜色):"
+  prompt-id: "输入新的物品ID (小写字母、数字、下划线):"
+  prompt-material: "输入材质名称 (例如 DIAMOND_SWORD):"
+  prompt-model: "输入自定义模型数据编号:"
+  prompt-lore: "输入描述行，用 | 分隔:"
+  cancel-hint: "§7输入 cancel 取消。"
+  cancelled: "§c已取消。"
+
+  name-set: "§a名称已设为: §f%s"
+  id-set: "§a物品ID已设为: §f%s"
+  material-set: "§a材质已设为: §f%s"
+  model-set: "§a模型数据已设为: §f%s"
+  lore-set: "§a描述已设置 (%d 行)"
+  invalid-number: "§c无效数字。请使用 /ugc edit 重试。"
+
+  # Set Bonus
+  field-set: "§e套装"
+  prompt-set: "输入套装名称:"
+  set-set: "§a套装已设为: §f%s"
+
+  # Attributes
+  prompt-attribute-add: "输入 属性名 数值 (例如 damage 5.0):"
+  attribute-added: "§a已添加属性: §f%s §7= §f%s"
+  attribute-removed: "§c已移除属性: %s"
+  attr-none: "§7暂无属性"
+
+  # Ability keys
+  abilities-title: "§8技能列表 - %s"
+  ability-edit-title: "§8编辑技能 - %s"
+  prompt-ability-key: "输入技能key (例如 right_click):"
+  ability-added: "§a已添加技能: %s"
+  ability-deleted: "§c已删除技能: %s"
+  field-type: "§e类型"
+  field-cooldown: "§e冷却 (秒)"
+  field-mana: "§e魔法消耗"
+  field-delete: "§c§l删除"
+  prompt-type: "输入技能类型 (例如 projectile):"
+  prompt-cooldown: "输入冷却时间 (秒):"
+  prompt-mana: "输入魔法消耗:"
+  type-set: "§a类型已设为: §f%s"
+  cooldown-set: "§a冷却已设为: %d秒"
+  mana-set: "§a魔法消耗已设为: %d"
+  ability-none: "§7暂无技能"
+
+  # Passive keys
+  passives-title: "§8被动列表 - %s"
+  passive-edit-title: "§8编辑被动 - %s"
+  prompt-passive-key: "输入被动key (例如 on_hit):"
+  passive-added: "§a已添加被动: %s"
+  passive-deleted: "§c已删除被动: %s"
+  field-effect: "§e效果"
+  field-amplifier: "§e放大倍数"
+  prompt-effect: "输入效果类型 (例如 regeneration):"
+  prompt-amplifier: "输入放大倍数:"
+  effect-set: "§a效果已设为: §f%s"
+  amplifier-set: "§a放大倍数已设为: %d"
+  passive-none: "§7暂无被动"
+
+  # Recipe
+  recipe-title: "§8配方编辑 - %s"
+  prompt-shape: "输入3行形状，用逗号分隔 (例如 ABA,AAA,CDC):"
+  prompt-ingredients: "输入材料映射，逗号分隔 (例如 A=DIAMOND,B=STICK):"
+  shape-set: "§a形状已设为"
+  ingredients-set: "§a材料已设为"
+  recipe-cleared: "§c配方已清除"
+  edit-shape: "§a编辑形状"
+  edit-ingredients: "§a编辑材料"
+  clear-recipe: "§c清除配方"
+
+items:
+  cooldown: "§c技能冷却中。"
