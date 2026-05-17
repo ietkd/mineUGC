@@ -1,4 +1,4 @@
 name: mineUGC
-version: '1.0-SNAPSHOT'
+version: '${version}'
 main: org.mineUGC.plugin.MineUGC
 api-version: '1.21'
