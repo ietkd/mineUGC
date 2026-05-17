@@ -6,27 +6,35 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
+import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.items.ItemManager;
 
 import java.io.File;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiConsumer;
 
 public class GuiListener implements Listener {
     private final Plugin plugin;
     private final ItemManager itemManager;
     private final File itemsDirectory;
+    private final Messages messages;
     private final Map<UUID, EditSession> editSessions = new ConcurrentHashMap<>();
 
-    public GuiListener(Plugin plugin, ItemManager itemManager, File itemsDirectory) {
+    public GuiListener(Plugin plugin, ItemManager itemManager, File itemsDirectory, Messages messages) {
         this.plugin = plugin;
         this.itemManager = itemManager;
         this.itemsDirectory = itemsDirectory;
+        this.messages = messages;
     }
 
     ItemManager getItemManager() {
         return itemManager;
+    }
+
+    Messages getMessages() {
+        return messages;
     }
 
     File getItemsDirectory() {
@@ -41,13 +49,17 @@ public class GuiListener implements Listener {
         editSessions.remove(playerId);
     }
 
+    Optional<EditSession> getEditSession(UUID playerId) {
+        return Optional.ofNullable(editSessions.get(playerId));
+    }
+
     void promptField(Player player, String field, String message) {
         EditSession session = editSessions.get(player.getUniqueId());
         if (session == null) return;
         session.setPendingField(field);
         player.closeInventory();
         player.sendMessage("§e" + message);
-        player.sendMessage("§7Type 'cancel' to abort.");
+        player.sendMessage(messages.get("editor.cancel-hint"));
     }
 
     @EventHandler
@@ -62,7 +74,7 @@ public class GuiListener implements Listener {
         if (input.equalsIgnoreCase("cancel")) {
             session.setPendingField(null);
             reopenEditor(player, session);
-            player.sendMessage("§cCancelled.");
+            player.sendMessage(messages.get("editor.cancelled"));
             return;
         }
 
@@ -72,26 +84,31 @@ public class GuiListener implements Listener {
         switch (field) {
             case "name" -> {
                 def.setName(input);
-                player.sendMessage("§aName set to: §f" + input);
+                player.sendMessage(messages.get("editor.name-set", input));
             }
             case "material" -> {
                 def.setMaterial(input.toUpperCase());
-                player.sendMessage("§aMaterial set to: §f" + input.toUpperCase());
+                player.sendMessage(messages.get("editor.material-set", input.toUpperCase()));
             }
             case "model" -> {
                 try {
                     int model = Integer.parseInt(input);
                     def.setModel(model);
-                    player.sendMessage("§aModel data set to: §f" + model);
+                    player.sendMessage(messages.get("editor.model-set", String.valueOf(model)));
                 } catch (NumberFormatException e) {
-                    player.sendMessage("§cInvalid number. Use /ugc edit to try again.");
+                    player.sendMessage(messages.get("editor.invalid-number"));
                     return;
                 }
             }
             case "lore" -> {
                 String[] lines = input.split("\\|");
                 def.setLore(Arrays.asList(lines));
-                player.sendMessage("§aLore set (" + lines.length + " lines)");
+                player.sendMessage(messages.get("editor.lore-set", lines.length));
+            }
+            case "id" -> {
+                String sanitized = input.toLowerCase().replaceAll("[^a-z0-9_/]", "_");
+                def.setId(sanitized);
+                player.sendMessage(messages.get("editor.id-set", sanitized));
             }
         }
 
@@ -101,7 +118,12 @@ public class GuiListener implements Listener {
 
     private void reopenEditor(Player player, EditSession session) {
         Bukkit.getScheduler().runTask(plugin, () -> {
-            new ItemEditorInventory(player, session.getDefinition(), itemManager, this).open(player);
+            BiConsumer<Player, GuiListener> action = session.getReopenAction();
+            if (action != null) {
+                action.accept(player, this);
+            } else {
+                new ItemEditorInventory(player, session.getDefinition(), itemManager, this).open(player);
+            }
         });
     }
 }
