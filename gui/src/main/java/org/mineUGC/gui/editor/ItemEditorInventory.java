@@ -36,7 +36,7 @@ public class ItemEditorInventory extends FastInv {
         setItem(14, createItem(Material.ANVIL, m.get("editor.field-id"), current(def.getId(), m)),
                 e -> guiListener.promptField(player, "id", m.get("editor.prompt-id")));
         setItem(15, createItem(Material.DIAMOND_SWORD, m.get("editor.field-attributes"), m.get("editor.click-configure")),
-                e -> player.sendMessage(m.get("editor.coming-soon", m.get("editor.field-attributes"))));
+                e -> new AttributesInventory(player, def, itemManager, guiListener).open(player));
 
         setItem(20, createItem(Material.BLAZE_POWDER, m.get("editor.field-abilities"), m.get("editor.click-configure")),
                 e -> player.sendMessage(m.get("editor.coming-soon", m.get("editor.field-abilities"))));

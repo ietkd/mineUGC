@@ -114,6 +114,23 @@ public class GuiListener implements Listener {
                 def.setSet(input);
                 player.sendMessage(messages.get("editor.set-set", input));
             }
+            case "attribute_add" -> {
+                String[] parts = input.split(" ");
+                if (parts.length == 2) {
+                    try {
+                        double val = Double.parseDouble(parts[1]);
+                        if (def.getAttributes() == null) def.setAttributes(new HashMap<>());
+                        def.getAttributes().put(parts[0], val);
+                        player.sendMessage(messages.get("editor.attribute-added", parts[0], parts[1]));
+                    } catch (NumberFormatException e) {
+                        player.sendMessage(messages.get("editor.invalid-number"));
+                        return;
+                    }
+                } else {
+                    player.sendMessage(messages.get("editor.invalid-number"));
+                    return;
+                }
+            }
         }
 
         session.setPendingField(null);
