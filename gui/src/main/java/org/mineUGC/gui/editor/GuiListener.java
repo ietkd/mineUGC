@@ -110,6 +110,10 @@ public class GuiListener implements Listener {
                 def.setId(sanitized);
                 player.sendMessage(messages.get("editor.id-set", sanitized));
             }
+            case "set" -> {
+                def.setSet(input);
+                player.sendMessage(messages.get("editor.set-set", input));
+            }
         }
 
         session.setPendingField(null);
