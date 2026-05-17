@@ -57,7 +57,10 @@ public class YamlWatcher implements AutoCloseable {
                         onChange.accept(changed);
                     }
                 }
-                key.reset();
+                if (!key.reset()) {
+                    logger.warning("Watch key is no longer valid, stopping watcher");
+                    break;
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
                 break;

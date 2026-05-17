@@ -5,7 +5,19 @@
       "Bash('C:/Program Files/Java/zulu21.40.17-ca-jdk21.0.6-win_x64/bin/java' -version)",
       "Bash(git *)",
       "Bash(C:\\\\Users\\\\ruksin\\\\.claude\\\\skills\\\\brainstorming\\\\scripts\\\\start-server.sh *)",
-      "Bash(./gradlew build *)"
+      "Bash(./gradlew build *)",
+      "Bash(./gradlew clean *)",
+      "Bash(jar tf *)",
+      "Bash(./gradlew :plugin:properties)",
+      "Bash(unzip *)",
+      "Bash(./gradlew --version)",
+      "Bash(./gradlew -q :plugin:properties)",
+      "Bash(./gradlew -q :storage:properties)",
+      "Bash(./gradlew -q :plugin:jar :plugin:build)",
+      "Bash(./gradlew :core:test)",
+      "Bash(./gradlew :core:cleanTest *)",
+      "Bash(./gradlew :core:test --info)",
+      "Bash(./gradlew :storage:test *)"
     ]
   }
 }
