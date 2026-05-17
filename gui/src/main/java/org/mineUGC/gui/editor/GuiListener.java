@@ -7,6 +7,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.plugin.Plugin;
 import org.mineUGC.core.message.Messages;
+import org.mineUGC.core.model.AbilityConfig;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.items.ItemManager;
 
@@ -127,6 +128,57 @@ public class GuiListener implements Listener {
                         return;
                     }
                 } else {
+                    player.sendMessage(messages.get("editor.invalid-number"));
+                    return;
+                }
+            }
+            case "ability_add" -> {
+                if (def.getAbilities() == null) def.setAbilities(new HashMap<>());
+                if (def.getAbilities().containsKey(input)) {
+                    player.sendMessage("§c技能key已存在: " + input);
+                    return;
+                }
+                def.getAbilities().put(input, new AbilityConfig());
+                player.sendMessage(messages.get("editor.ability-added", input));
+            }
+            case "ability_type" -> {
+                String key = session.getEditingAbilityKey();
+                if (key != null && def.getAbilities() != null) {
+                    AbilityConfig ability = def.getAbilities().get(key);
+                    if (ability != null) {
+                        ability.setType(input);
+                        player.sendMessage(messages.get("editor.type-set", input));
+                    }
+                }
+            }
+            case "ability_cooldown" -> {
+                try {
+                    int val = Integer.parseInt(input);
+                    String key = session.getEditingAbilityKey();
+                    if (key != null && def.getAbilities() != null) {
+                        AbilityConfig ability = def.getAbilities().get(key);
+                        if (ability != null) {
+                            ability.setCooldown(val);
+                            player.sendMessage(messages.get("editor.cooldown-set", val));
+                        }
+                    }
+                } catch (NumberFormatException e) {
+                    player.sendMessage(messages.get("editor.invalid-number"));
+                    return;
+                }
+            }
+            case "ability_mana" -> {
+                try {
+                    int val = Integer.parseInt(input);
+                    String key = session.getEditingAbilityKey();
+                    if (key != null && def.getAbilities() != null) {
+                        AbilityConfig ability = def.getAbilities().get(key);
+                        if (ability != null) {
+                            ability.setManaCost(val);
+                            player.sendMessage(messages.get("editor.mana-set", val));
+                        }
+                    }
+                } catch (NumberFormatException e) {
                     player.sendMessage(messages.get("editor.invalid-number"));
                     return;
                 }
