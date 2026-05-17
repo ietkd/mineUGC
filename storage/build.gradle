@@ -1,4 +1,5 @@
 dependencies {
     implementation project(':core')
     implementation 'org.xerial:sqlite-jdbc:3.45.1.0'
+    testImplementation("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 }
