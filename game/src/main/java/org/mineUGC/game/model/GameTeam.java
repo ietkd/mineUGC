@@ -18,7 +18,7 @@ public class GameTeam {
     public boolean removeMember(UUID playerId) { return members.remove(playerId); }
     public boolean hasMember(UUID playerId) { return members.contains(playerId); }
     public int getMemberCount() { return members.size(); }
-    public int getAliveCount() { return (int) members.stream().filter(id -> alive).count(); }
+    public int getAliveCount() { return alive ? members.size() : 0; }
     public int getScore() { return score; }
     public void addScore(int points) { this.score += points; }
     public boolean isAlive() { return alive && !members.isEmpty(); }

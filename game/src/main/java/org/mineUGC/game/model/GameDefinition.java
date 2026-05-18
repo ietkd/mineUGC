@@ -3,6 +3,7 @@ package org.mineUGC.game.model;
 import org.mineUGC.core.model.UgcAsset;
 
 import java.util.*;
+import java.util.Objects;
 
 public class GameDefinition implements UgcAsset {
     private String id;
@@ -35,6 +36,7 @@ public class GameDefinition implements UgcAsset {
     private List<String> objectIds = new ArrayList<>();
 
     @Override public String getId() { return id; }
+    public void setId(String id) { this.id = id; }
     @Override public String getType() { return "game"; }
 
     // Getters and setters for all fields
@@ -76,4 +78,14 @@ public class GameDefinition implements UgcAsset {
     public void setDeviceIds(List<String> ids) { this.deviceIds = ids; }
     public List<String> getObjectIds() { return objectIds; }
     public void setObjectIds(List<String> ids) { this.objectIds = ids; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof GameDefinition that)) return false;
+        return Objects.equals(id, that.id);
+    }
+
+    @Override
+    public int hashCode() { return Objects.hashCode(id); }
 }
