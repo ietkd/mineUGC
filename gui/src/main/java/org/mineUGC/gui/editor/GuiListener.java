@@ -10,6 +10,7 @@ import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.AbilityConfig;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.core.model.PassiveConfig;
+import org.mineUGC.core.model.RecipeConfig;
 import org.mineUGC.items.ItemManager;
 
 import java.io.File;
@@ -228,6 +229,29 @@ public class GuiListener implements Listener {
                     player.sendMessage(messages.get("editor.invalid-number"));
                     return;
                 }
+            }
+            case "recipe_shape" -> {
+                String[] rows = input.split(",");
+                if (rows.length != 3) {
+                    player.sendMessage("§c需要3行，用逗号分隔");
+                    return;
+                }
+                if (def.getRecipe() == null) def.setRecipe(new RecipeConfig());
+                def.getRecipe().setShape(Arrays.asList(rows));
+                player.sendMessage(messages.get("editor.shape-set"));
+            }
+            case "recipe_ingredients" -> {
+                String[] pairs = input.split(",");
+                Map<String, String> ingredients = new HashMap<>();
+                for (String pair : pairs) {
+                    String[] parts = pair.split("=");
+                    if (parts.length == 2) {
+                        ingredients.put(parts[0].trim().toUpperCase(), parts[1].trim().toUpperCase());
+                    }
+                }
+                if (def.getRecipe() == null) def.setRecipe(new RecipeConfig());
+                def.getRecipe().setIngredients(ingredients);
+                player.sendMessage(messages.get("editor.ingredients-set"));
             }
         }
 

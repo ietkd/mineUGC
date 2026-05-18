@@ -45,7 +45,7 @@ public class ItemEditorInventory extends FastInv {
         setItem(22, createItem(Material.ENDER_EYE, m.get("editor.field-set-bonus"), current(def.getSet(), m)),
                 e -> guiListener.promptField(player, "set", m.get("editor.prompt-set")));
         setItem(23, createItem(Material.CRAFTING_TABLE, m.get("editor.field-recipe"), m.get("editor.click-configure")),
-                e -> player.sendMessage(m.get("editor.coming-soon", m.get("editor.field-recipe"))));
+                e -> new RecipeInventory(player, def, itemManager, guiListener).open(player));
 
         setItem(31, createItem(Material.LIME_WOOL, m.get("editor.field-save"), m.get("editor.save-lore")),
                 e -> saveDefinition(player, def, guiListener));

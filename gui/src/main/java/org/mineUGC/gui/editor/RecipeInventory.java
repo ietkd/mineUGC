@@ -2,14 +2,12 @@ package org.mineUGC.gui.editor;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.mineUGC.core.message.Messages;
 import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.core.model.RecipeConfig;
 import org.mineUGC.gui.fastinv.FastInv;
 import org.mineUGC.items.ItemManager;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
