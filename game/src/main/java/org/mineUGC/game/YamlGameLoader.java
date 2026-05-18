@@ -2,7 +2,6 @@ package org.mineUGC.game;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.mineUGC.core.model.ItemDefinition;
 import org.mineUGC.game.model.GameDefinition;
 
 import java.io.File;
@@ -11,13 +10,20 @@ import java.io.IOException;
 public class YamlGameLoader {
 
     public GameDefinition load(File file) throws IOException {
+        if (!file.exists()) {
+            throw new IOException("Game definition file not found: " + file.getAbsolutePath());
+        }
         YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
         return parse(config);
     }
 
     public GameDefinition parse(ConfigurationSection config) {
         GameDefinition def = new GameDefinition();
-        def.setId(config.getString("id"));
+        String id = config.getString("id");
+        if (id == null || id.isBlank()) {
+            throw new IllegalArgumentException("Game definition missing required 'id' field");
+        }
+        def.setId(id);
         def.setName(config.getString("name"));
         def.setMapWorldName(config.getString("map_world"));
         def.setMaxPlayers(config.getInt("max_players", 16));
