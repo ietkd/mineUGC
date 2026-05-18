@@ -1,0 +1,19 @@
+id: classic_battle_royale
+name: "经典大逃杀"
+map_world: "br_map_01"
+max_players: 16
+min_players: 2
+team_mode: solo
+team_size: 1
+warmup_time: 30
+time_limit: 1800
+pvp: true
+friendly_fire: false
+circle:
+  enabled: true
+  initial_delay: 120
+  shrink_duration: 90
+  damage_per_sec: 1.0
+win_condition: last_standing
+allowed_items:
+  - "*"
