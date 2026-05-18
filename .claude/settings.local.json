@@ -62,7 +62,8 @@
       "Bash(./gradlew compileJava -Xlint:deprecation)",
       "Bash(./gradlew :items:compileJava --warning-mode all)",
       "Bash(./gradlew :items:compileJava :gui:compileJava)",
-      "Bash(./gradlew :items:compileJava -Dorg.gradle.jvmargs=\"-Xlint:deprecation\")"
+      "Bash(./gradlew :items:compileJava -Dorg.gradle.jvmargs=\"-Xlint:deprecation\")",
+      "Bash(./gradlew runServer)"
     ]
   }
 }
