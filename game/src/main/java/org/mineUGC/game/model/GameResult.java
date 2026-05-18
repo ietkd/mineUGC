@@ -9,7 +9,8 @@ public class GameResult {
     private final int totalKills;
     private final long durationSeconds;
 
-    public GameResult(String gameDefinitionId, GameTeam winner, Map<UUID, GamePlayer> players,
+    public GameResult(String gameDefinitionId, GameTeam winner,
+                      Map<UUID, GamePlayer> players,
                       int totalKills, long durationSeconds) {
         this.gameDefinitionId = gameDefinitionId;
         this.winner = winner;

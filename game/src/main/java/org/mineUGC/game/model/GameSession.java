@@ -3,17 +3,16 @@ package org.mineUGC.game.model;
 import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import org.mineUGC.items.ItemManager;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class GameSession {
     private final String id;
     private final GameDefinition definition;
     private final Plugin plugin;
-    private final ItemManager itemManager;
 
     private GamePhase phase = GamePhase.LOBBY;
     private int phaseTicks;
@@ -22,7 +21,7 @@ public class GameSession {
 
     // Players and teams
     private final Map<UUID, GamePlayer> players = new ConcurrentHashMap<>();
-    private final List<GameTeam> teams = new ArrayList<>();
+    private final List<GameTeam> teams = new CopyOnWriteArrayList<>();
 
     // Safe zone state
     private Location circleCenter;
@@ -36,12 +35,10 @@ public class GameSession {
     private long startTime;
     private final long createdAt = System.currentTimeMillis();
 
-    public GameSession(String id, GameDefinition definition, Plugin plugin,
-                       ItemManager itemManager) {
+    public GameSession(String id, GameDefinition definition, Plugin plugin) {
         this.id = id;
         this.definition = definition;
         this.plugin = plugin;
-        this.itemManager = itemManager;
     }
 
     // === Getters ===
@@ -81,7 +78,10 @@ public class GameSession {
 
     public void removePlayer(UUID playerId) {
         players.remove(playerId);
-        teams.forEach(t -> t.removeMember(playerId));
+        teams.removeIf(t -> {
+            t.removeMember(playerId);
+            return t.getMemberCount() == 0;
+        });
     }
 
     public GamePlayer getGamePlayer(UUID playerId) {
@@ -218,7 +218,7 @@ public class GameSession {
 
         // Lerp circle size
         double progress = Math.min(1.0, (double) circleShrinkTicks / definition.getCircleShrinkDuration());
-        currentRadius = currentRadius + (targetRadius - currentRadius) * (progress / 10.0);
+        currentRadius = currentRadius + (targetRadius - currentRadius) * progress;
 
         if (progress >= 1.0) {
             currentRadius = targetRadius;
@@ -334,7 +334,7 @@ public class GameSession {
                 // One team left
                 GameTeam winner = alive.isEmpty() ? null : alive.get(0);
                 endGame(winner);
-            } else if (players.size() <= 1 && players.size() == 1) {
+            } else if (players.size() == 1) {
                 // Single player last standing
                 UUID lastId = players.keySet().iterator().next();
                 GameTeam winner = teams.stream()
