@@ -48,7 +48,21 @@
       "Bash(./gradlew :items:compileJava)",
       "Bash(C:/Users/ruksin/.claude/skills/brainstorming/scripts/start-server.sh *)",
       "WebSearch",
-      "Bash(./gradlew :gui:compileJava *)"
+      "Bash(./gradlew :gui:compileJava *)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://github.com)",
+      "Bash(ping -n 1 github.com)",
+      "Bash(env)",
+      "Bash(nslookup github.com)",
+      "Bash(curl -vvv https://github.com)",
+      "Bash(curl *)",
+      "WebFetch(domain:api.papermc.io)",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\(f'Total: {d.get\\(\\\\\"total\\\\\",0\\)}'\\); print\\(f'Latest: {d[\\\\\"builds\\\\\"][-1][\\\\\"build\\\\\"] if d.get\\(\\\\\"builds\\\\\"\\) else \\\\\"none\\\\\"}'\\)\")",
+      "Bash(python3 -c \"import json,sys; d=json.load\\(sys.stdin\\); print\\('Versions:', ', '.join\\(d.get\\('versions',[]\\)\\)\\)\")",
+      "Bash(python3 -c ' *)",
+      "Bash(./gradlew compileJava -Xlint:deprecation)",
+      "Bash(./gradlew :items:compileJava --warning-mode all)",
+      "Bash(./gradlew :items:compileJava :gui:compileJava)",
+      "Bash(./gradlew :items:compileJava -Dorg.gradle.jvmargs=\"-Xlint:deprecation\")"
     ]
   }
 }

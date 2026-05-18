@@ -30,7 +30,7 @@ subprojects {
     }
 
     dependencies {
-        compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+        compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
         testImplementation platform('org.junit:junit-bom:5.10.2')
         testImplementation 'org.junit.jupiter:junit-jupiter'
     }
@@ -40,8 +40,8 @@ subprojects {
     }
 }
 
-def paperVersion = '1.21.1'
-def paperBuild = 133
+def paperVersion = '1.21.4'
+def paperBuild = 232
 def paperJar = "paper-${paperVersion}-${paperBuild}.jar"
 def paperUrl = "https://api.papermc.io/v2/projects/paper/versions/${paperVersion}/builds/${paperBuild}/downloads/${paperJar}"
 def runDir = file('run')

@@ -77,7 +77,7 @@ public class AttributeApplier {
             }
 
             AttributeModifier modifier = new AttributeModifier(
-                    new NamespacedKey("minecraft", "ugc_" + entry.getKey()),
+                    NamespacedKey.minecraft("ugc_" + entry.getKey()),
                     entry.getValue(),
                     AttributeModifier.Operation.ADD_NUMBER,
                     EquipmentSlotGroup.MAINHAND
