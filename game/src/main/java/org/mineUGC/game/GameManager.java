@@ -4,20 +4,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.mineUGC.game.model.GameDefinition;
-import org.mineUGC.game.model.GamePhase;
 import org.mineUGC.game.model.GameSession;
-import org.mineUGC.items.ItemManager;
-import org.mineUGC.items.InventoryScanner;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GameManager {
     private final Plugin plugin;
-    private final ItemManager itemManager;
-    private final InventoryScanner inventoryScanner;
     private final GameRegistry gameRegistry;
-    private final YamlGameLoader gameLoader;
 
     private final Map<String, GameSession> activeSessions = new ConcurrentHashMap<>();
     private final Map<UUID, String> playerSessions = new ConcurrentHashMap<>();
@@ -25,14 +19,9 @@ public class GameManager {
     // Queue management
     private final Map<String, List<UUID>> queues = new ConcurrentHashMap<>();
 
-    public GameManager(Plugin plugin, ItemManager itemManager,
-                       InventoryScanner inventoryScanner,
-                       GameRegistry gameRegistry, YamlGameLoader gameLoader) {
+    public GameManager(Plugin plugin, GameRegistry gameRegistry) {
         this.plugin = plugin;
-        this.itemManager = itemManager;
-        this.inventoryScanner = inventoryScanner;
         this.gameRegistry = gameRegistry;
-        this.gameLoader = gameLoader;
     }
 
     // === Session Lifecycle ===
@@ -70,7 +59,7 @@ public class GameManager {
         }
 
         // Force transition to PRE_GAME
-        session.setPhase(GamePhase.PRE_GAME);
+        session.setPhase(org.mineUGC.game.model.GamePhase.PRE_GAME);
         return true;
     }
 
@@ -78,8 +67,9 @@ public class GameManager {
         GameSession session = activeSessions.get(sessionId);
         if (session == null) return false;
 
-        // Clean up
-        playerSessions.values().removeIf(s -> s.equals(sessionId));
+        // Clean up — remove each player by UUID from playerSessions
+        session.getPlayers().forEach(gp ->
+            playerSessions.remove(gp.getPlayerId()));
         queues.remove(sessionId);
         activeSessions.remove(sessionId);
         return true;
@@ -140,7 +130,7 @@ public class GameManager {
 
     public boolean addToQueue(Player player, String gameDefinitionId) {
         if (playerSessions.containsKey(player.getUniqueId())) return false;
-        queues.computeIfAbsent(gameDefinitionId, k -> new ArrayList<>()).add(player.getUniqueId());
+        queues.computeIfAbsent(gameDefinitionId, k -> Collections.synchronizedList(new ArrayList<>())).add(player.getUniqueId());
         return true;
     }
 
