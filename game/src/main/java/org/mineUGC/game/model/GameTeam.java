@@ -1,7 +1,5 @@
 package org.mineUGC.game.model;
 
-import org.bukkit.entity.Player;
-
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
