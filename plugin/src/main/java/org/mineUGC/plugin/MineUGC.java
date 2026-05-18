@@ -22,6 +22,12 @@ import org.mineUGC.storage.yaml.YamlWatcher;
 import org.mineUGC.gui.editor.GuiListener;
 import org.mineUGC.gui.editor.MainMenuInventory;
 import org.mineUGC.gui.fastinv.FastInvManager;
+import org.mineUGC.game.GameManager;
+import org.mineUGC.game.GameRegistry;
+import org.mineUGC.game.GameTickTask;
+import org.mineUGC.game.YamlGameLoader;
+import org.mineUGC.game.listeners.GamePlayerListener;
+import org.mineUGC.game.model.GameSession;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,6 +48,9 @@ public class MineUGC extends JavaPlugin {
     private GuiListener guiListener;
     private CustomRecipeManager recipeManager;
     private Messages messages;
+    private GameRegistry gameRegistry;
+    private YamlGameLoader gameLoader;
+    private GameManager gameManager;
 
     @Override
     public void onEnable() {
@@ -76,6 +85,21 @@ public class MineUGC extends JavaPlugin {
         // GUI
         this.guiListener = new GuiListener(this, itemManager, getItemsDirectory(), messages);
 
+        // Game engine
+        this.gameRegistry = new GameRegistry();
+        this.gameLoader = new YamlGameLoader();
+        this.gameManager = new GameManager(this, gameRegistry);
+
+        // Load game definitions from YAML
+        loadGameDefinitions();
+
+        // Register game listener
+        getServer().getPluginManager().registerEvents(
+                new GamePlayerListener(gameManager), this);
+
+        // Start game tick task (1 tick per second)
+        new GameTickTask(gameManager).runTaskTimer(this, 0L, 20L);
+
         // Load items from files
         loadAllItems();
 
@@ -99,6 +123,7 @@ public class MineUGC extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (gameManager != null) gameManager.shutdown();
         if (yamlWatcher != null) yamlWatcher.close();
         if (database != null) database.close();
         if (recipeManager != null) recipeManager.unregisterAll();
@@ -133,6 +158,30 @@ public class MineUGC extends JavaPlugin {
             }
         }
         getLogger().info("Loaded " + registry.size() + " items");
+    }
+
+    private void loadGameDefinitions() {
+        File gamesDir = new File(getDataFolder(), "games");
+        if (!gamesDir.exists()) {
+            gamesDir.mkdirs();
+            // Save example definition
+            saveResource("games/classic_battle_royale.yml", false);
+        }
+
+        File[] files = gamesDir.listFiles((dir, name) ->
+                name.endsWith(".yml") || name.endsWith(".yaml"));
+        if (files == null) return;
+
+        for (File file : files) {
+            try {
+                var def = gameLoader.load(file);
+                if (def.getId() == null) continue;
+                gameRegistry.register(def);
+                getLogger().info("Loaded game: " + def.getId());
+            } catch (Exception e) {
+                getLogger().warning("Failed to load game: " + file.getName());
+            }
+        }
     }
 
     private void startFileWatcher() {
@@ -171,6 +220,8 @@ public class MineUGC extends JavaPlugin {
     }
 
     private void registerCommands() {
+        GameRegistry gameReg = this.gameRegistry;
+        GameManager gm = this.gameManager;
         var cmd = getServer().getPluginCommand("ugc");
         if (cmd != null) {
             cmd.setExecutor(new UgcCommand(messages) {
@@ -218,6 +269,85 @@ public class MineUGC extends JavaPlugin {
                             Player p = (Player) sender;
                             new MainMenuInventory(p, itemManager, guiListener).open(p);
                         }
+                        case "game" -> {
+                            if (!requirePlayer(sender)) return true;
+                            Player p = (Player) sender;
+                            if (args.length < 2) {
+                                p.sendMessage(messages.get("command.game-usage"));
+                                return true;
+                            }
+                            switch (args[1].toLowerCase()) {
+                                case "create" -> {
+                                    if (args.length < 3) {
+                                        p.sendMessage("§c/ugc game create <gameId>");
+                                        return true;
+                                    }
+                                    String worldName = args.length > 3 ? args[3] : null;
+                                    GameSession session = gm.createSession(args[2], worldName);
+                                    if (session != null) {
+                                        p.sendMessage("§a游戏已创建! ID: " + session.getId());
+                                    } else {
+                                        p.sendMessage("§c创建失败，未找到游戏定义: " + args[2]);
+                                    }
+                                }
+                                case "join" -> {
+                                    if (args.length < 3) {
+                                        p.sendMessage("§c/ugc game join <sessionId>");
+                                        return true;
+                                    }
+                                    if (gm.joinSession(args[2], p)) {
+                                        p.sendMessage("§a已加入游戏 " + args[2]);
+                                    } else {
+                                        p.sendMessage("§c加入失败");
+                                    }
+                                }
+                                case "leave" -> {
+                                    gm.leaveSession(p);
+                                    p.sendMessage("§a已离开游戏");
+                                }
+                                case "start" -> {
+                                    if (args.length < 3) {
+                                        // Try to start the session the player is in
+                                        GameSession s = gm.getPlayerSession(p);
+                                        if (s != null && gm.startSession(s.getId())) {
+                                            p.sendMessage("§a已开始游戏");
+                                        } else {
+                                            p.sendMessage("§c未找到游戏或无法开始");
+                                        }
+                                        return true;
+                                    }
+                                    if (gm.startSession(args[2])) {
+                                        p.sendMessage("§a已开始游戏 " + args[2]);
+                                    } else {
+                                        p.sendMessage("§c开始失败");
+                                    }
+                                }
+                                case "stop" -> {
+                                    String id = args.length > 2 ? args[2] : null;
+                                    if (id == null) {
+                                        GameSession s = gm.getPlayerSession(p);
+                                        if (s != null) id = s.getId();
+                                    }
+                                    if (id != null && gm.stopSession(id)) {
+                                        p.sendMessage("§a已停止游戏 " + id);
+                                    } else {
+                                        p.sendMessage("§c停止失败");
+                                    }
+                                }
+                                case "list" -> {
+                                    var sessions = gm.getActiveSessions();
+                                    if (sessions.isEmpty()) {
+                                        p.sendMessage("§7暂无活跃游戏");
+                                    } else {
+                                        p.sendMessage("§e活跃游戏:");
+                                        sessions.forEach(s -> p.sendMessage(
+                                                " §7" + s.getId() + " (" + s.getDefinition().getName()
+                                                + ") §f" + s.getPhase()));
+                                    }
+                                }
+                                default -> p.sendMessage("§c用法: /ugc game create|join|leave|start|stop|list");
+                            }
+                        }
                         default ->
                             sender.sendMessage(messages.get("command.usage"));
                     }
@@ -227,12 +357,21 @@ public class MineUGC extends JavaPlugin {
                 @Override
                 protected List<String> tabComplete(CommandSender sender, Command command, String alias, String[] args) {
                     if (args.length == 1) {
-                        return List.of("list", "give", "reload", "edit");
+                        return List.of("list", "give", "reload", "edit", "game");
                     }
                     if (args.length == 2 && args[0].equalsIgnoreCase("give")) {
                         return itemManager.getAllDefinitions().stream()
                                 .map(ItemDefinition::getId)
                                 .filter(id -> id.startsWith(args[1].toLowerCase()))
+                                .toList();
+                    }
+                    if (args.length == 2 && args[0].equalsIgnoreCase("game")) {
+                        return List.of("create", "join", "leave", "start", "stop", "list");
+                    }
+                    if (args.length == 3 && args[0].equalsIgnoreCase("game") &&
+                        (args[1].equalsIgnoreCase("create"))) {
+                        return gameReg.getAll().stream()
+                                .map(g -> g.getId())
                                 .toList();
                     }
                     return List.of();

@@ -11,7 +11,8 @@ command:
   item-not-found: "§c未找到物品: %s"
   item-received: "§a已获得 %s§a。"
   all-reloaded: "§a所有物品已重新加载。"
-  usage: "§c用法: /ugc <list|give|reload|edit>"
+  usage: "§c用法: /ugc <list|give|reload|edit|game>"
+  game-usage: "§c用法: /ugc game create|join|leave|start|stop|list"
 
 editor:
   title: "§8UGC 物品编辑器"
