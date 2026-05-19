@@ -67,7 +67,8 @@
       "Bash(./gradlew :gui:test *)",
       "Bash(./gradlew :gui:cleanTest :gui:test)",
       "Bash(./gradlew :gui:cleanTest :gui:test --info)",
-      "Bash(awk '{s+=$1} END {print s \" total tests\"}')"
+      "Bash(awk '{s+=$1} END {print s \" total tests\"}')",
+      "Bash(gh auth *)"
     ]
   }
 }
