@@ -43,7 +43,7 @@ public class AbilityListInventory extends FastInv {
         setItem(48, MainMenuInventory.createItem(Material.LIME_WOOL,
                 "§a§l" + m.get("editor.click-configure"), "§7" + m.get("editor.prompt-ability-key")),
                 e -> {
-                    guiListener.promptField(player, "ability_add", m.get("editor.prompt-ability-key"));
+                    guiListener.openAnvilInput(player, "ability_add");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setReopenAction((p, g) ->
                                     new AbilityListInventory(p, def, itemManager, g).open(p)));

@@ -25,16 +25,16 @@ public class ItemEditorInventory extends FastInv {
         setItem(4, preview);
 
         setItem(10, createItem(Material.NAME_TAG, m.get("editor.field-name"), current(def.getName(), m)),
-                e -> guiListener.promptField(player, "name", m.get("editor.prompt-name")));
+                e -> guiListener.openAnvilInput(player, "name"));
         setItem(11, createItem(Material.GRASS_BLOCK, m.get("editor.field-material"), current(def.getMaterial(), m)),
-                e -> guiListener.promptField(player, "material", m.get("editor.prompt-material")));
+                e -> guiListener.openAnvilInput(player, "material"));
         setItem(12, createItem(Material.ITEM_FRAME, m.get("editor.field-model"), current(String.valueOf(def.getModel()), m)),
-                e -> guiListener.promptField(player, "model", m.get("editor.prompt-model")));
+                e -> guiListener.openAnvilInput(player, "model"));
         setItem(13, createItem(Material.BOOK, m.get("editor.field-lore"),
                         def.getLore() != null ? def.getLore().size() + " lines" : m.get("editor.not-set")),
-                e -> guiListener.promptField(player, "lore", m.get("editor.prompt-lore")));
+                e -> guiListener.openAnvilInput(player, "lore"));
         setItem(14, createItem(Material.ANVIL, m.get("editor.field-id"), current(def.getId(), m)),
-                e -> guiListener.promptField(player, "id", m.get("editor.prompt-id")));
+                e -> guiListener.openAnvilInput(player, "id"));
         setItem(15, createItem(Material.DIAMOND_SWORD, m.get("editor.field-attributes"), m.get("editor.click-configure")),
                 e -> new AttributesInventory(player, def, itemManager, guiListener).open(player));
 
@@ -43,7 +43,7 @@ public class ItemEditorInventory extends FastInv {
         setItem(21, createItem(Material.POTION, m.get("editor.field-passives"), m.get("editor.click-configure")),
                 e -> new PassiveListInventory(player, def, itemManager, guiListener).open(player));
         setItem(22, createItem(Material.ENDER_EYE, m.get("editor.field-set-bonus"), current(def.getSet(), m)),
-                e -> guiListener.promptField(player, "set", m.get("editor.prompt-set")));
+                e -> guiListener.openAnvilInput(player, "set"));
         setItem(23, createItem(Material.CRAFTING_TABLE, m.get("editor.field-recipe"), m.get("editor.click-configure")),
                 e -> new RecipeInventory(player, def, itemManager, guiListener).open(player));
 

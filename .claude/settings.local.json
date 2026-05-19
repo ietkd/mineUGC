@@ -63,7 +63,11 @@
       "Bash(./gradlew :items:compileJava --warning-mode all)",
       "Bash(./gradlew :items:compileJava :gui:compileJava)",
       "Bash(./gradlew :items:compileJava -Dorg.gradle.jvmargs=\"-Xlint:deprecation\")",
-      "Bash(./gradlew runServer)"
+      "Bash(./gradlew runServer)",
+      "Bash(./gradlew :gui:test *)",
+      "Bash(./gradlew :gui:cleanTest :gui:test)",
+      "Bash(./gradlew :gui:cleanTest :gui:test --info)",
+      "Bash(awk '{s+=$1} END {print s \" total tests\"}')"
     ]
   }
 }

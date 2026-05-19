@@ -21,21 +21,21 @@ public class PassiveEditInventory extends FastInv {
         setItem(11, MainMenuInventory.createItem(Material.NAME_TAG, m.get("editor.field-type"),
                         m.get("editor.current", passive.getType() != null ? passive.getType() : "?")),
                 e -> {
-                    guiListener.promptField(player, "passive_type", m.get("editor.prompt-type"));
+                    guiListener.openAnvilInput(player, "passive_type");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setEditingPassiveKey(passiveKey));
                 });
         setItem(13, MainMenuInventory.createItem(Material.POTION, m.get("editor.field-effect"),
                         m.get("editor.current", passive.getEffect() != null ? passive.getEffect() : "?")),
                 e -> {
-                    guiListener.promptField(player, "passive_effect", m.get("editor.prompt-effect"));
+                    guiListener.openAnvilInput(player, "passive_effect");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setEditingPassiveKey(passiveKey));
                 });
         setItem(15, MainMenuInventory.createItem(Material.REPEATER, m.get("editor.field-amplifier"),
                         m.get("editor.current", String.valueOf(passive.getAmplifier()))),
                 e -> {
-                    guiListener.promptField(player, "passive_amplifier", m.get("editor.prompt-amplifier"));
+                    guiListener.openAnvilInput(player, "passive_amplifier");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setEditingPassiveKey(passiveKey));
                 });

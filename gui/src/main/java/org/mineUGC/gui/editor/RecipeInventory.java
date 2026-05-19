@@ -59,14 +59,14 @@ public class RecipeInventory extends FastInv {
         // Buttons
         setItem(30, MainMenuInventory.createItem(Material.LIME_WOOL, m.get("editor.edit-shape"), "§7" + m.get("editor.prompt-shape")),
                 e -> {
-                    guiListener.promptField(player, "recipe_shape", m.get("editor.prompt-shape"));
+                    guiListener.openAnvilInput(player, "recipe_shape");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setReopenAction((p, g) ->
                                     new RecipeInventory(p, def, itemManager, g).open(p)));
                 });
         setItem(32, MainMenuInventory.createItem(Material.LIME_WOOL, m.get("editor.edit-ingredients"), "§7" + m.get("editor.prompt-ingredients")),
                 e -> {
-                    guiListener.promptField(player, "recipe_ingredients", m.get("editor.prompt-ingredients"));
+                    guiListener.openAnvilInput(player, "recipe_ingredients");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setReopenAction((p, g) ->
                                     new RecipeInventory(p, def, itemManager, g).open(p)));

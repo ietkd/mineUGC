@@ -39,7 +39,7 @@ public class AttributesInventory extends FastInv {
         setItem(48, MainMenuInventory.createItem(Material.LIME_WOOL,
                 "§a§l" + m.get("editor.click-configure"), "§7" + m.get("editor.prompt-attribute-add")),
                 e -> {
-                    guiListener.promptField(player, "attribute_add", m.get("editor.prompt-attribute-add"));
+                    guiListener.openAnvilInput(player, "attribute_add");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setReopenAction((p, g) ->
                                     new AttributesInventory(p, def, itemManager, g).open(p)));

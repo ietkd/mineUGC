@@ -43,7 +43,7 @@ public class PassiveListInventory extends FastInv {
         setItem(48, MainMenuInventory.createItem(Material.LIME_WOOL,
                 "§a§l" + m.get("editor.click-configure"), "§7" + m.get("editor.prompt-passive-key")),
                 e -> {
-                    guiListener.promptField(player, "passive_add", m.get("editor.prompt-passive-key"));
+                    guiListener.openAnvilInput(player, "passive_add");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setReopenAction((p, g) ->
                                     new PassiveListInventory(p, def, itemManager, g).open(p)));

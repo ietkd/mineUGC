@@ -21,21 +21,21 @@ public class AbilityEditInventory extends FastInv {
         setItem(11, MainMenuInventory.createItem(Material.NAME_TAG, m.get("editor.field-type"),
                         m.get("editor.current", ability.getType() != null ? ability.getType() : "?")),
                 e -> {
-                    guiListener.promptField(player, "ability_type", m.get("editor.prompt-type"));
+                    guiListener.openAnvilInput(player, "ability_type");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setEditingAbilityKey(abilityKey));
                 });
         setItem(13, MainMenuInventory.createItem(Material.CLOCK, m.get("editor.field-cooldown"),
                         m.get("editor.current", ability.getCooldown() + "s")),
                 e -> {
-                    guiListener.promptField(player, "ability_cooldown", m.get("editor.prompt-cooldown"));
+                    guiListener.openAnvilInput(player, "ability_cooldown");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setEditingAbilityKey(abilityKey));
                 });
         setItem(15, MainMenuInventory.createItem(Material.EXPERIENCE_BOTTLE, m.get("editor.field-mana"),
                         m.get("editor.current", String.valueOf(ability.getManaCost()))),
                 e -> {
-                    guiListener.promptField(player, "ability_mana", m.get("editor.prompt-mana"));
+                    guiListener.openAnvilInput(player, "ability_mana");
                     guiListener.getEditSession(player.getUniqueId()).ifPresent(session ->
                             session.setEditingAbilityKey(abilityKey));
                 });
